@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+
+<div class="text-center">
+    <h1 class="display-4">Available commands</h1>
+    
+    <div class="d-flex justify-content-start">
+        @foreach (var command in Model.Commands)
+            {
+                <div>
+                    <a asp-page="command" asp-route-name="@command.Name">@command.Name</a>
+                </div>
+            }
+    </div>
+
+</div>
