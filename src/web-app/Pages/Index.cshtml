@@ -5,10 +5,10 @@
     <h1 class="display-4">Available commands</h1>
     
     <div class="d-flex justify-content-start">
-        @foreach (var command in Model.Commands)
+        @foreach (var commandName in Model.AvailableCommandNames)
             {
                 <div>
-                    <a asp-page="command" asp-route-name="@command.Name">@command.Name</a>
+                    <a asp-page="command" asp-route-name="@commandName">@commandName</a>
                 </div>
             }
     </div>

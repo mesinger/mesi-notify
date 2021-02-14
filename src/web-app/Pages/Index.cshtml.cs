@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Mesi.Notify.Core;
+using Mesi.Notify.ApplicationLayer.Visuals;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using web_app.Models;
 
 namespace web_app.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ICommandFactory _commandFactory;
+        private readonly IGetAvailableCommandNames _getAvailableCommandNames;
 
-        public IndexModel(ICommandFactory commandFactory)
+        public IndexModel(IGetAvailableCommandNames getAvailableCommandNames)
         {
-            _commandFactory = commandFactory;
+            _getAvailableCommandNames = getAvailableCommandNames;
         }
 
-        public IEnumerable<CommandViewModel> Commands { get; private set; }
+        public IEnumerable<string> AvailableCommandNames { get; private set; }
 
         public void OnGet()
         {
-            var commands = _commandFactory.GetAllCommands();
-            Commands = commands.Select(command => command.ToViewModel());
+            AvailableCommandNames = from name in _getAvailableCommandNames.GetAll() select name.Name;
         }
     }
 }

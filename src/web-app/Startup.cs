@@ -1,3 +1,5 @@
+using Mesi.Notify.ApplicationLayer.Executions;
+using Mesi.Notify.ApplicationLayer.Visuals;
 using Mesi.Notify.Core;
 using Mesi.Notify.Infra;
 using Microsoft.AspNetCore.Builder;
@@ -21,11 +23,21 @@ namespace web_app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddControllers();
 
-            services.AddScoped<ICommandFactory, ReflectionCommandFactory>();
+            services.Configure<EmailOptions>(Configuration.GetSection("Email"));
+
+            services.AddScoped<ICommandFactory, ReflectionCommandProvider>();
+            services.AddScoped<ICommandRepository, ReflectionCommandProvider>();
             services.AddScoped<IFileSystem, FileSystem>();
             services.AddScoped<ICommandResponseSender, DefaultCommandResponseSender>();
             services.AddScoped<IEmailCommandResponseSender, EmailCommandResponseSender>();
+            services.AddScoped<ISmtpClient, DefaultSmtpClient>();
+
+            services.AddScoped<IGetAvailableCommandNames, VisualsApplicationService>();
+            services.AddScoped<IGetCommandByName, VisualsApplicationService>();
+            services.AddScoped<IExecuteCommand, ExecutionsApplicationService>();
+            services.AddScoped<IExecuteCommandWithPropertiesAsJson, ExecutionsApplicationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,7 +50,6 @@ namespace web_app
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -46,7 +57,11 @@ namespace web_app
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+                endpoints.MapControllers();
+            });
         }
     }
 }

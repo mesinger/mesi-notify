@@ -6,9 +6,20 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\application-layer\application-layer.csproj" />
       <ProjectReference Include="..\commands\Mesi.Notify.Command.HelloWorld\Mesi.Notify.Command.HelloWorld.csproj" />
       <ProjectReference Include="..\core\core.csproj" />
       <ProjectReference Include="..\infra\infra.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\js\site.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\scripts\components\execute-command-form.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\scripts\components\execute-command-form.d.ts.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\scripts\main.d.ts" />
+      <_ContentIncludedByDefault Remove="wwwroot\scripts\main.d.ts.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\scripts\site.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\scripts\site.js.LICENSE.txt" />
     </ItemGroup>
 
 </Project>

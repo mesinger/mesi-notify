@@ -2,7 +2,5 @@
 @model web_app.Pages.CommandModel
 
 <div>
-    <form method="post">
-        <input type="submit" value="Execute">
-    </form>
+    <execute-command-form commandName="@Model.Command.Name" required="@Model.Command.RequiredPropertiesToJson()" optional="@Model.Command.OptionalPropertiesToJson()"></execute-command-form>
 </div>

@@ -36,7 +36,10 @@ namespace Mesi.Notify.Core
     {
         IExecutableCommand? GetExecutableByName(CommandName name);
         ICommand? GetByName(CommandName name);
+    }
 
+    public interface ICommandRepository
+    {
         IEnumerable<ICommand> GetAllCommands();
     }
 

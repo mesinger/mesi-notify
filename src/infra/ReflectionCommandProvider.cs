@@ -6,11 +6,11 @@ using Mesi.Notify.Core;
 
 namespace Mesi.Notify.Infra
 {
-    public class ReflectionCommandFactory : ICommandFactory
+    public class ReflectionCommandProvider : ICommandFactory, ICommandRepository
     {
         private readonly IFileSystem _fileSystem;
 
-        public ReflectionCommandFactory(IFileSystem fileSystem)
+        public ReflectionCommandProvider(IFileSystem fileSystem)
         {
             _fileSystem = fileSystem;
         }

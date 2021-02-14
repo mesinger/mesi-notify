@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using CSharpFunctionalExtensions;
+using Mesi.Notify.ApplicationLayer.Executions;
+using Mesi.Notify.ApplicationLayer.Visuals;
 using Mesi.Notify.Core;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,20 +10,20 @@ namespace web_app.Pages
 {
     public class CommandModel : PageModel
     {
-        private readonly ICommandFactory _commandFactory;
-        private readonly ICommandResponseSender _commandResponseSender;
+        private readonly IGetCommandByName _getCommandByName;
+        private readonly IExecuteCommandWithPropertiesAsJson _executeCommandWithPropertiesAsJson;
 
-        public CommandModel(ICommandFactory commandFactory, ICommandResponseSender commandResponseSender)
+        public CommandModel(IGetCommandByName getCommandByName, IExecuteCommandWithPropertiesAsJson executeCommandWithPropertiesAsJson)
         {
-            _commandFactory = commandFactory;
-            _commandResponseSender = commandResponseSender;
+            _getCommandByName = getCommandByName;
+            _executeCommandWithPropertiesAsJson = executeCommandWithPropertiesAsJson;
         }
         
         public CommandViewModel Command { get; private set; }
         
         public IActionResult OnGet(string name)
         {
-            var command = _commandFactory.GetByName(new CommandName(name));
+            var command = _getCommandByName.GetByName(new CommandName(name));
 
             if (command == null)
             {
@@ -30,28 +31,7 @@ namespace web_app.Pages
             }
 
             Command = command.ToViewModel();
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPost(string name)
-        {
-            var command = _commandFactory.GetExecutableByName(new CommandName(name));
-
-            if (command == null)
-            {
-                return NotFound();
-            }
-
-            Command = command.ToViewModel();
-
-            var (isSuccess, _, value) = await command.Execute(command.RequiredPropertiesWithDefaultValues());
-
-            if (isSuccess)
-            {
-                await _commandResponseSender.SendCommandResponse(value,
-                    new EmailRecipient("test@holobolo.at"));
-            }
-                    
+            
             return Page();
         }
     }
