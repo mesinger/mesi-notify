@@ -2,15 +2,16 @@
 @model IndexModel
 
 <div class="text-center">
-    <h1 class="display-4">Available commands</h1>
-    
-    <div class="d-flex justify-content-start">
+    <h1 class="display-4 mb-4">Available commands</h1>
+    <div class="d-flex justify-content-start flex-wrap">
         @foreach (var commandName in Model.AvailableCommandNames)
-            {
-                <div>
-                    <a asp-page="command" asp-route-name="@commandName">@commandName</a>
-                </div>
-            }
+        {
+            <div class="p-2 ml-1 shadow-sm">
+                <p>
+                    @commandName
+                </p>
+                <a class="btn btn-primary w-75" asp-page="command" asp-route-name="@commandName">Go</a>
+            </div>
+        }
     </div>
-
 </div>

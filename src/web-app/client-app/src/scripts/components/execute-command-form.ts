@@ -49,7 +49,7 @@ export class ExecuteCommandFormComponent extends LitElement {
                                .value="${prop.value}" placeholder="...">
                     </div>
                 `)}
-                <button type="submit" class="btn btn-primary" @click="${this.onSubmit}">Submit</button>
+                <button type="submit" class="btn btn-primary" @click="${this.onSubmit}">Execute</button>
             </div>
         `;
     }

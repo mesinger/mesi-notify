@@ -2,5 +2,8 @@
 @model web_app.Pages.CommandModel
 
 <div>
+    <h1 class="text-center display-4 mb-4">
+        @Model.Command.Name
+    </h1>
     <execute-command-form commandName="@Model.Command.Name" required="@Model.Command.RequiredPropertiesToJson()" optional="@Model.Command.OptionalPropertiesToJson()"></execute-command-form>
 </div>
