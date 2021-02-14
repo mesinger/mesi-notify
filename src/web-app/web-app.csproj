@@ -7,7 +7,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\application-layer\application-layer.csproj" />
-      <ProjectReference Include="..\commands\Mesi.Notify.Command.HelloWorld\Mesi.Notify.Command.HelloWorld.csproj" />
+      <ProjectReference Include="..\commands\addition-command\addition-command.csproj" />
+      <ProjectReference Include="..\commands\hello-world-command\hello-world-command.csproj" />
       <ProjectReference Include="..\core\core.csproj" />
       <ProjectReference Include="..\infra\infra.csproj" />
     </ItemGroup>

@@ -6,7 +6,6 @@ using CSharpFunctionalExtensions;
 using Mesi.Notify.Core;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using JsonException = System.Text.Json.JsonException;
 
 namespace Mesi.Notify.ApplicationLayer.Executions
 {
@@ -25,33 +24,36 @@ namespace Mesi.Notify.ApplicationLayer.Executions
         }
 
         /// <inheritdoc />
-        public async Task Execute(CommandName name, IEnumerable<CommandProperty> properties)
+        public async Task<Result> Execute(CommandName name, IEnumerable<CommandProperty> properties)
         {
             var command = _commandFactory.GetExecutableByName(name);
 
             if (command == null)
             {
                 _logger.LogWarning("Trying to execute unknown command '{}'", name.Name);
-                return;
+                return Result.Failure("Unknown command");
             }
 
-            var (isSuccess, _, response) = await command.Execute(properties);
+            var result = await command.Execute(properties);
 
-            if (isSuccess)
+            if (result.IsSuccess)
             {
-                await _commandResponseSender.SendCommandResponse(response, new EmailRecipient("test@holobolo.at"));
+                await _commandResponseSender.SendCommandResponse(result.Value, new EmailRecipient("test@holobolo.at"));
+                return Result.Success();
             }
+
+            return Result.Failure(result.Error);
         }
 
         /// <inheritdoc />
-        public Task Execute(CommandName name, string propertiesAsJson)
+        public async Task<Result> Execute(CommandName name, string propertiesAsJson)
         {
             if (string.IsNullOrWhiteSpace(propertiesAsJson))
             {
-                return Task.CompletedTask;
+                return Result.Failure("Invalid properties");
             }
             
-            return Execute(name, ParsePropertiesFromJson(propertiesAsJson));
+            return await Execute(name, ParsePropertiesFromJson(propertiesAsJson));
         }
 
         private IEnumerable<CommandProperty> ParsePropertiesFromJson(string propertiesJson)

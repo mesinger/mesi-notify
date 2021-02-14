@@ -36,23 +36,25 @@ export class ExecuteCommandFormComponent extends LitElement {
         return html`
             <div>
                 ${this.requiredProperties.map(prop => html`
-                        <div class="form-group">
-                            <label for="${this.getInputFieldIdForProperty(prop)}">${prop.name}</label>
-                            <input type="text" class="form-control" id="${this.getInputFieldIdForProperty(prop)}" .value="${prop.value}" placeholder="..." required>
-                        </div>
-                    `)}
+                    <div class="form-group">
+                        <label for="${this.getInputFieldIdForProperty(prop)}">${prop.name}</label>
+                        <input type="text" class="form-control" id="${this.getInputFieldIdForProperty(prop)}"
+                               .value="${prop.value}" placeholder="..." required>
+                    </div>
+                `)}
                 ${this.optionalProperties.map(prop => html`
-                        <div class="form-group">
-                            <label for="${this.getInputFieldIdForProperty(prop)}">${prop.name}</label>
-                            <input type="text" class="form-control" id="${this.getInputFieldIdForProperty(prop)}" .value="${prop.value}" placeholder="...">
-                        </div>
-                    `)}
+                    <div class="form-group">
+                        <label for="${this.getInputFieldIdForProperty(prop)}">${prop.name}</label>
+                        <input type="text" class="form-control" id="${this.getInputFieldIdForProperty(prop)}"
+                               .value="${prop.value}" placeholder="...">
+                    </div>
+                `)}
                 <button type="submit" class="btn btn-primary" @click="${this.onSubmit}">Submit</button>
             </div>
         `;
     }
 
-    private onSubmit() {
+    private async onSubmit() {
         this.requiredProperties = this.requiredProperties.map(prop => {
             const inputField = <HTMLInputElement>document.getElementById(this.getInputFieldIdForProperty(prop));
             const newValue = inputField.value;
@@ -67,12 +69,15 @@ export class ExecuteCommandFormComponent extends LitElement {
 
         const properties = this.requiredProperties.concat(this.optionalProperties);
 
-        const propertiesData: {[id: string]: string; } = {};
+        const propertiesData: { [id: string]: string; } = {};
         properties.forEach(property => propertiesData[property.name] = property.value);
 
-        axios.post(`/api/command/execute?commandName=${this.commandName}&properties=${JSON.stringify(propertiesData)}`).then(rsp => {
-
-        });
+        try {
+            const rsp = await axios.post(`/api/command/execute?commandName=${this.commandName}&properties=${JSON.stringify(propertiesData)}`);
+            alert("success");
+        } catch (error) {
+            alert(error.response.data);
+        }
     }
 
     private getInputFieldIdForProperty(property: CommandProperty): string {

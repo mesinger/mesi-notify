@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 using Mesi.Notify.Core;
 
-namespace Mesi.Notify.Command.HelloWorld
+namespace Mesi.Notify.Commands.HelloWorld
 {
     [CommandName("hello-world.command")]
     public class HelloWorldCommand : IExecutableCommand
@@ -13,13 +13,13 @@ namespace Mesi.Notify.Command.HelloWorld
         /// <inheritdoc />
         public IEnumerable<CommandProperty> RequiredPropertiesWithDefaultValues()
         {
-            return new[] {new CommandProperty("name", "Your name")};
+            return Enumerable.Empty<CommandProperty>();
         }
 
         /// <inheritdoc />
         public IEnumerable<CommandProperty> OptionalPropertiesWithDefaultValues()
         {
-            return Enumerable.Empty<CommandProperty>();
+            return new[] {new CommandProperty("name", "Your name")};
         }
 
         /// <inheritdoc />

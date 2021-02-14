@@ -19,8 +19,11 @@ namespace web_app.Controllers
         [HttpPost]
         public async Task<IActionResult> SendCommand(string commandName, string properties)
         {
-            await _executeCommandWithPropertiesAsJson.Execute(new CommandName(commandName), properties);
-            return Ok();
+            var result = await _executeCommandWithPropertiesAsJson.Execute(new CommandName(commandName), properties);
+            
+            return result.IsSuccess
+                ? Ok()
+                : BadRequest(result.Error);
         }
     }
 }
