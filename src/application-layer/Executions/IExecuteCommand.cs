@@ -7,11 +7,11 @@ namespace Mesi.Notify.ApplicationLayer.Executions
 {
     public interface IExecuteCommand
     {
-        Task<Result> Execute(CommandName name, IEnumerable<CommandProperty> properties);
+        Task<Result> Execute(CommandName name, IEnumerable<CommandProperty> properties, IRecipient recipient);
     }
     
     public interface IExecuteCommandWithPropertiesAsJson
     {
-        Task<Result> Execute(CommandName name, string propertiesAsJson);
+        Task<Result> Execute(CommandName name, string propertiesAsJson, IRecipient recipient);
     }
 }

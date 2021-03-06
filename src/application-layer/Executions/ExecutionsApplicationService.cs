@@ -24,7 +24,7 @@ namespace Mesi.Notify.ApplicationLayer.Executions
         }
 
         /// <inheritdoc />
-        public async Task<Result> Execute(CommandName name, IEnumerable<CommandProperty> properties)
+        public async Task<Result> Execute(CommandName name, IEnumerable<CommandProperty> properties, IRecipient recipient)
         {
             var command = _commandFactory.GetExecutableByName(name);
 
@@ -38,7 +38,7 @@ namespace Mesi.Notify.ApplicationLayer.Executions
 
             if (result.IsSuccess)
             {
-                await _commandResponseSender.SendCommandResponse(result.Value, new EmailRecipient("test@holobolo.at"));
+                await _commandResponseSender.SendCommandResponse(result.Value, recipient);
                 return Result.Success();
             }
 
@@ -46,14 +46,14 @@ namespace Mesi.Notify.ApplicationLayer.Executions
         }
 
         /// <inheritdoc />
-        public async Task<Result> Execute(CommandName name, string propertiesAsJson)
+        public async Task<Result> Execute(CommandName name, string propertiesAsJson, IRecipient recipient)
         {
             if (string.IsNullOrWhiteSpace(propertiesAsJson))
             {
                 return Result.Failure("Invalid properties");
             }
             
-            return await Execute(name, ParsePropertiesFromJson(propertiesAsJson));
+            return await Execute(name, ParsePropertiesFromJson(propertiesAsJson), recipient);
         }
 
         private IEnumerable<CommandProperty> ParsePropertiesFromJson(string propertiesJson)

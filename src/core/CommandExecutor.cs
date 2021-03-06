@@ -26,7 +26,7 @@ namespace Mesi.Notify.Core
                     await _emailCommandResponseSender.SendCommandResponse(commandResponse, emailRecipient);
                     break;
                 default:
-                    throw new ArgumentException($"Unable to send command response to recipient of type '{nameof(recipient)}'");
+                    throw new ArgumentException($"Unable to send command response to recipient of type '{recipient.GetType().Name}'");
             };
         }
     }
