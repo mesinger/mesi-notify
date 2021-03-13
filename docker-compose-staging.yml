@@ -1,0 +1,22 @@
+﻿version: '3.7'
+
+services:
+  mesi-notify:
+    container_name: mesi-notify
+    image: mesi/notify
+
+    ports:
+      - ${MESI_NOTIFY_PORT}:5000
+        
+    environment:
+      - MESI_NOTIFY_Email__SmtpHost
+      - MESI_NOTIFY_Email__SmtpUser
+      - MESI_NOTIFY_Email__SmtpPassword
+      - MESI_NOTIFY_Authentication__Authority
+      - MESI_NOTIFY_Authentication__ClientId
+      - MESI_NOTIFY_Authentication__ClientSecret
+
+    extra_hosts: 
+      - "is4.raspi:192.168.0.129"
+
+    entrypoint: ["dotnet", "/app/mesi-notify.dll", "--urls", "http://0.0.0.0:5000"]

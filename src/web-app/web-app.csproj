@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>web_app</RootNamespace>
+        <AssemblyName>mesi-notify</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

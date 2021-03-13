@@ -36,11 +36,11 @@ namespace web_app
                 })
                 .AddOpenIdConnect("oidc", options =>
                 {
-                    options.Authority = "https://is4.raspi";
-                    options.ClientId = "mesi-notify-dev";
+                    options.Authority = Configuration["Authentication:Authority"];
+                    options.ClientId = Configuration["Authentication:ClientId"];
                     options.ResponseType = "code";
 
-                    options.ClientSecret = "secret";
+                    options.ClientSecret = Configuration["Authentication:ClientSecret"];
                     options.SaveTokens = true;
 
                     options.SignedOutCallbackPath = "/logout-redirect";
@@ -80,6 +80,17 @@ namespace web_app
             {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
+            }
+            
+            if (!env.IsDevelopment())
+            {
+                app.Use((context, next) =>
+                {
+                    context.Request.Scheme = "https";
+                    return next();
+                });
+                
+                app.UseForwardedHeaders();
             }
 
             app.UseStaticFiles();
