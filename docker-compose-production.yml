@@ -2,7 +2,7 @@
 
 services:
   mesi-notify:
-    container_name: mesi-notify   
+    container_name: mesi-notify
     image: mesi/notify
 
     ports:
@@ -15,8 +15,5 @@ services:
       - MESI_NOTIFY_Authentication__Authority
       - MESI_NOTIFY_Authentication__ClientId
       - MESI_NOTIFY_Authentication__ClientSecret
-
-    extra_hosts: 
-      - "is4.raspi:192.168.0.129"
 
     entrypoint: ["dotnet", "/app/mesi-notify.dll", "--urls", "http://0.0.0.0:5000"]

@@ -1,0 +1,62 @@
+---
+- hosts: aws
+  remote_user: ubuntu
+
+  vars:
+    build_path: /tmp/mesi/build
+    app_path: /home/ubuntu/notify
+
+  tasks:
+
+    - name: stop application
+      shell: docker-compose -f {{ app_path }}/docker-compose.yml down || /bin/true
+
+    - name: clean application
+      shell: find {{ app_path }} -type f ! -name 'log*' -delete || /bin/true
+
+    - name: create build directory
+      file:
+        path: "{{ build_path }}"
+        state: directory
+        mode: '0700'
+
+    - name: compress local sources
+      archive:
+        path: ./src
+        dest: src.zip
+        format: zip
+      delegate_to: localhost
+      become: false
+
+    - name: extract sources
+      unarchive:
+        src: src.zip
+        dest: "{{ build_path }}"
+
+    - name: copy additional files
+      copy:
+        src: "{{ item }}"
+        dest: "{{ build_path }}"
+      loop:
+        - "mesi-notify.sln"
+
+    - name: copy Dockerfile
+      copy:
+        src: "Dockerfile.production"
+        dest: "{{ build_path }}/Dockerfile"
+
+    - name: build docker image
+      shell: docker build -t mesi/notify {{ build_path }}
+
+    - name: delete build directory
+      file:
+        path: "{{ build_path }}"
+        state: absent
+
+    - name: copy docker-compose
+      copy:
+        src: docker-compose-production.yml
+        dest: "{{ app_path }}/docker-compose.yml"
+
+    - name: run application
+      shell: docker-compose -f {{ app_path }}/docker-compose.yml up -d
